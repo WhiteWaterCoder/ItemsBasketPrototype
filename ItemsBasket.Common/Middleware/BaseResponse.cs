@@ -1,16 +1,25 @@
 ﻿namespace ItemsBasket.Common.Middleware
 {
-    public class BaseResponse<T>
+    public class BaseResponse
     {
-        public T Item { get; }
         public bool IsSuccessful { get; }
         public string ErrorMessage { get; }
 
-        protected BaseResponse(T item, bool isSuccessful, string errorMessage)
+        protected BaseResponse(bool isSuccessful, string errorMessage)
         {
-            Item = item;
             IsSuccessful = isSuccessful;
             ErrorMessage = errorMessage;
+        }
+    }
+
+    public class BaseResponse<T> : BaseResponse
+    {
+        public T Item { get; }
+        
+        protected BaseResponse(T item, bool isSuccessful, string errorMessage)
+            : base(isSuccessful, errorMessage)
+        {
+            Item = item;
         }
     }
 }

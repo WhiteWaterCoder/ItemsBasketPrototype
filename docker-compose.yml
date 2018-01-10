@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  itemsbasket.basketservice:
+    image: itemsbasket.basketservice
+    build:
+      context: .
+      dockerfile: ItemsBasket.BasketService\Dockerfile
