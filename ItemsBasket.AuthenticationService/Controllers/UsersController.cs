@@ -1,13 +1,15 @@
-﻿using ItemsBasket.AuthenticationService.Responses;
+﻿using ItemsBasket.AuthenticationService.Models;
+using ItemsBasket.AuthenticationService.Responses;
 using ItemsBasket.AuthenticationService.Services.Interfaces;
-using ItemsBasket.Common.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace ItemsBasket.AuthenticationService.Controllers
 {
+    /// <summary>
+    /// Performs CRUD actions for a single user account.
+    /// </summary>
     [Produces("application/json")]
     [Route("api/Users")]
     public class UsersController : Controller
@@ -19,24 +21,22 @@ namespace ItemsBasket.AuthenticationService.Controllers
             _usersRepository = usersRepository;
         }
 
+        /// <summary>
+        /// Return a list of usernames currently registered in the data store.
+        /// </summary>
+        /// <returns>List of registered usernames.</returns>
         [HttpGet]
-        public async Task<IEnumerable<User>> Get()
+        public async Task<IEnumerable<string>> Get()
         {
             return await _usersRepository.List();
         }
 
         /// <summary>
-        /// Retrieves the user details for the provided username and password.
+        /// Update an existing user account. The only properties that can be modified are the 
+        /// username and/or password of the account.
         /// </summary>
-        /// <param name="username"></param>
-        /// <param name="password"></param>
-        /// <returns></returns>
-        [HttpGet("{username},{password}", Name = "Get")]
-        public async Task<UserResponse> Get(string username, string password)
-        {
-            return await _usersRepository.Get(username, password);
-        }
-
+        /// <param name="user">The user details to be modified.</param>
+        /// <returns>A response containing success/failure of the operation and an error message if one occurs.</returns>
         [HttpPost]
         public async Task<UserResponse> Post([FromBody]User user)
         {
@@ -46,7 +46,7 @@ namespace ItemsBasket.AuthenticationService.Controllers
         [HttpPut]
         public async Task<UserResponse> Put([FromBody]User user)
         {
-            return await _usersRepository.Create(user.UserName, user.Password);
+            return await _usersRepository.Create(user.Username, user.Password);
         }
 
         [HttpDelete]

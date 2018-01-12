@@ -1,5 +1,5 @@
-﻿using ItemsBasket.Common.Middleware;
-using ItemsBasket.Common.Models;
+﻿using ItemsBasket.AuthenticationService.Models;
+using ItemsBasket.Common.Controllers;
 
 namespace ItemsBasket.AuthenticationService.Responses
 {

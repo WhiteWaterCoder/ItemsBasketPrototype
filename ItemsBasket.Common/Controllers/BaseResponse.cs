@@ -1,4 +1,4 @@
-﻿namespace ItemsBasket.Common.Middleware
+﻿namespace ItemsBasket.Common.Controllers
 {
     public class BaseResponse
     {
