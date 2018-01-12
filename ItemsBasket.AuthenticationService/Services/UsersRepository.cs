@@ -1,6 +1,6 @@
-﻿using ItemsBasket.AuthenticationService.Responses;
+﻿using ItemsBasket.AuthenticationService.Models;
+using ItemsBasket.AuthenticationService.Responses;
 using ItemsBasket.AuthenticationService.Services.Interfaces;
-using ItemsBasket.Common.Exceptions;
 using ItemsBasket.Common.Models;
 using System;
 using System.Collections.Generic;
@@ -14,6 +14,7 @@ namespace ItemsBasket.AuthenticationService.Services
     /// be running. Most of the code would be redundant with a SQL (or any) db, specially
     /// for key creation.
     /// </summary>
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
     public class UsersRepository : IUsersRepository
     {
         private static readonly object _newUserLock = new object();
@@ -28,38 +29,51 @@ namespace ItemsBasket.AuthenticationService.Services
         private int _currentMaxUserId = 1;
         private readonly IDictionary<int, User> _context = new Dictionary<int, User>
         {
-            { 1, new User(1, UsersValidator.AdminUserName, "pass", Guid.Empty.ToString()) }
+            { 1, new User(1, UsersValidator.AdminUsername, "pass") }
         };
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-        public async Task<IEnumerable<User>> List()
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+        /// <summary>
+        /// Return a list of user names registered in the data store.
+        /// </summary>
+        /// <returns>List of usernames.</returns>
+        public async Task<IEnumerable<string>> List()
         {
-            return _context.Select(c => c.Value);
+            return _context.Select(c => c.Value.Username);
         }
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-        public async Task<UserResponse> Get(string username, string password)
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+        /// <summary>
+        /// Check if a username exists and if the password matches.
+        /// </summary>
+        /// <param name="username">The username of the user to check.</param>
+        /// <param name="password">The password of the user.</param>
+        /// <returns>
+        /// A tuple containing a flag denoting if the user was authenticated, the user id and a string with 
+        /// a response if an error occurred or if the authentication failed.
+        /// </returns>
+        public async Task<(bool, int, string)> IsAuthenticated(string username, string password)
         {
-            var user = _context.Values.FirstOrDefault(c => string.Equals(c.UserName, username));
+            var user = _context.Values.FirstOrDefault(c => string.Equals(c.Username, username));
 
             if (user == null)
             {
-                return UserResponse.CreateFailedResult($"No user found with username = {username}");
+                return (false, -1, $"No user found with username = {username}");
             }
 
             if (!string.Equals(user.Password, password))
             {
-                return UserResponse.CreateFailedResult($"The password provided for user with username = {username} is wrong. Please try again.");
+                return (false, -1, $"The password provided for user with username = {username} is wrong. Please try again.");
             }
 
-            return UserResponse.CreateSuccessfulResult(user);
+            return (true, user.UserId, "");
         }
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+        /// <summary>
+        /// Create a new user account. Some crude validation will take place to ensure it is valid.
+        /// </summary>
+        /// <param name="userName">The username of the account.</param>
+        /// <param name="password">THe password of the account.</param>
+        /// <returns>A response containing success/failure of the operation and an error message if one occurs.</returns>
         public async Task<UserResponse> Create(string userName, string password)
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             int nextUserId;
             User newUser;
@@ -79,20 +93,24 @@ namespace ItemsBasket.AuthenticationService.Services
                 nextUserId = _currentMaxUserId;
             }
 
-            newUser = new User(nextUserId, userName, password, Guid.NewGuid().ToString());
+            newUser = new User(nextUserId, userName, password);
 
-            _context.Add(newUser.Id, newUser);
+            _context.Add(newUser.UserId, newUser);
 
             return UserResponse.CreateSuccessfulResult(newUser);
         }
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+        /// <summary>
+        /// Update the details of a registered user. The properties that can be modified are the username
+        /// and the password.
+        /// </summary>
+        /// <param name="user">The user details of the account to be modified.</param>
+        /// <returns>A response containing success/failure of the operation and an error message if one occurs.</returns>
         public async Task<UserResponse> Update(User user)
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
-            if (!_context.TryGetValue(user.Id, out User existingUser))
+            if (!_context.TryGetValue(user.UserId, out User existingUser))
             {
-                return UserResponse.CreateFailedResult($"Could not find user with ID = {user.Id} to update.");
+                return UserResponse.CreateFailedResult($"Could not find user with ID = {user.UserId} to update.");
             }
 
             if (!_usersValidator.IsAuthorizedToModify(user, existingUser, out string notAuthorizedMessage))
@@ -100,18 +118,26 @@ namespace ItemsBasket.AuthenticationService.Services
                 return UserResponse.CreateFailedResult(notAuthorizedMessage);
             }
 
-            _context[user.Id] = user;
+            if (!_usersValidator.IsUsernameUnique(user.Password, _context, out string errorMessage))
+            {
+                return UserResponse.CreateFailedResult(errorMessage);
+            }
+
+            _context[user.UserId] = user;
 
             return UserResponse.CreateSuccessfulResult(user);
         }
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+        /// <summary>
+        /// Delete a user account.
+        /// </summary>
+        /// <param name="user">The account details of the user to delete.</param>
+        /// <returns>A response containing success/failure of the operation and an error message if one occurs.</returns>
         public async Task<UserResponse> Delete(User user)
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
-            if (!_context.TryGetValue(user.Id, out User existingUser))
+            if (!_context.TryGetValue(user.UserId, out User existingUser))
             {
-                return UserResponse.CreateFailedResult($"Could not find user with ID = {user.Id} to update.");
+                return UserResponse.CreateFailedResult($"Could not find user with ID = {user.UserId} to update.");
             }
 
             if (!_usersValidator.IsAuthorizedToModify(user, existingUser, out string notAuthorizedMessage))
@@ -119,9 +145,10 @@ namespace ItemsBasket.AuthenticationService.Services
                 return UserResponse.CreateFailedResult(notAuthorizedMessage);
             }
 
-            _context.Remove(user.Id);
+            _context.Remove(user.UserId);
 
             return UserResponse.CreateSuccessfulResult(User.Empty);
         }
     }
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
 }

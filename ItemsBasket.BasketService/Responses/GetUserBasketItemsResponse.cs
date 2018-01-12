@@ -1,5 +1,5 @@
 ﻿using ItemsBasket.BasketService.Models;
-using ItemsBasket.Common.Middleware;
+using ItemsBasket.Common.Controllers;
 using System.Collections.Generic;
 
 namespace ItemsBasket.BasketService.Responses

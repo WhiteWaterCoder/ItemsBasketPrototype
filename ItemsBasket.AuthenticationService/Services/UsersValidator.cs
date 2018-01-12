@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ItemsBasket.AuthenticationService.Models;
 using ItemsBasket.AuthenticationService.Services.Interfaces;
-using ItemsBasket.Common.Models;
 
 namespace ItemsBasket.AuthenticationService.Services
 {
     public class UsersValidator : IUsersValidator
     {
-        public const string AdminUserName = "admin";
+        public const string AdminUsername = "admin";
 
         public bool IsUsernameUnique(string userName, IDictionary<int, User> context, out string errorMessage)
         {
-            if (context.Values.Any(v => string.Equals(v.UserName, userName)))
+            if (context.Values.Any(v => string.Equals(v.Username, userName)))
             {
                 errorMessage = $"Username {userName} is not unique. Please select a unique username.";
                 return false;
@@ -35,7 +35,7 @@ namespace ItemsBasket.AuthenticationService.Services
 
         public bool IsAuthorizedToModify(User user, User existingUser, out string notAuthorizedMessage)
         {
-            if (user.Id == 1 || string.Equals(user.UserName, AdminUserName))
+            if (user.UserId == 1 || string.Equals(user.Username, AdminUsername))
             {
                 notAuthorizedMessage = $"Noone is authorized to modify the admin user.";
                 return false;
@@ -43,13 +43,7 @@ namespace ItemsBasket.AuthenticationService.Services
 
             if (!string.Equals(user.Password, existingUser.Password))
             {
-                notAuthorizedMessage = $"Password for user with ID = {user.Id} is incorrect. You are not authorized to modify the account.";
-                return false;
-            }
-
-            if (!string.Equals(user.SecurityToken, existingUser.SecurityToken))
-            {
-                notAuthorizedMessage = $"Security token for user with ID = {user.Id} is incorrect. You are not authorized to modify the account.";
+                notAuthorizedMessage = $"Password for user with ID = {user.UserId} is incorrect. You are not authorized to modify the account.";
                 return false;
             }
 

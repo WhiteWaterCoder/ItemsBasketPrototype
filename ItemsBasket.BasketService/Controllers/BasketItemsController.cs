@@ -1,9 +1,14 @@
 ﻿using System;
+using System.Security.Claims;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using ItemsBasket.BasketService.Models;
 using ItemsBasket.BasketService.Responses;
 using ItemsBasket.BasketService.Services.Interfaces;
+using ItemsBasket.Common.Controllers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace ItemsBasket.BasketService.Controllers
 {
@@ -11,37 +16,57 @@ namespace ItemsBasket.BasketService.Controllers
     /// Performs operations on multiple basket items for a given user.
     /// Only Get/Post (update)/Delete (clear all items) operations are supported.
     /// </summary>
+    [Authorize]
     [Produces("application/json")]
     [Route("api/BasketItems")]
-    public class BasketItemsController : Controller
+    public class BasketItemsController : Controller, IAuthorizedController
+
     {
         private readonly IBasketItemsRepository _basketItemsRepository;
+        private readonly ILogger<BasketItemsController> _logger;
 
-        public BasketItemsController(IBasketItemsRepository basketItemsRepository)
+        public BasketItemsController(IBasketItemsRepository basketItemsRepository,
+            ILogger<BasketItemsController> logger)
         {
             _basketItemsRepository = basketItemsRepository;
+            _logger = logger;
+        }
+
+        public ILogger GetLogger()
+        {
+            return _logger;
+        }
+
+        public IIdentity GetUserIdentity()
+        {
+            return User.Identity;
         }
 
         /// <summary>
         /// Retrieves all the items currently in the basket of the requested user.
         /// </summary>
         /// <param name="userId">The ID of the user to retrieve the basket for.</param>
-        /// <param name="securityToken">The security token of the user.</param>
-        /// <returns>The items of the users basket as well as a response containing 
-        /// success/failure of the operation and an error message if one occurs.</returns>
-        [HttpGet("{userId}&{securityToken}", Name = "Get")]
-        public async Task<GetUserBasketItemsResponse> Get(int userId, string securityToken)
+        /// <returns>
+        /// The items of the users basket as well as a response containing 
+        /// success/failure of the operation and an error message if one occurs.
+        /// </returns>
+        [HttpGet("{userId}", Name = "Get")]
+        public async Task<GetUserBasketItemsResponse> Get(int userId)
         {
-            try
-            {
-                //TODO: Authenticate based on security token
-                return await _basketItemsRepository.GetBasketItems(userId);
-            }
-            catch (Exception e)
-            {
-                //TODO :Log
-                return GetUserBasketItemsResponse.CreateFailedResult("An error occurred while trying to fetch the users basket items.");
-            }
+            return await this.ExecuteAuthorizedAction(
+                id => _basketItemsRepository.GetBasketItems(userId),
+                e => GetUserBasketItemsResponse.CreateFailedResult(e),
+                "An error occurred while trying to fetch the users basket items.");
+
+            //try
+            //{
+            //    return await _basketItemsRepository.GetBasketItems(userId);
+            //}
+            //catch (Exception e)
+            //{
+            //    //TODO :Log
+            //    return GetUserBasketItemsResponse.CreateFailedResult("An error occurred while trying to fetch the users basket items.");
+            //}
         }
 
         /// <summary>

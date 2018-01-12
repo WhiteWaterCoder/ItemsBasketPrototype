@@ -1,4 +1,4 @@
-﻿using ItemsBasket.Common.Models;
+﻿using ItemsBasket.AuthenticationService.Models;
 using System.Collections.Generic;
 
 namespace ItemsBasket.AuthenticationService.Services.Interfaces

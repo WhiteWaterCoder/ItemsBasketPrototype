@@ -1,4 +1,4 @@
-﻿using ItemsBasket.Common.Middleware;
+﻿using ItemsBasket.Common.Controllers;
 
 namespace ItemsBasket.BasketService.Responses
 {
