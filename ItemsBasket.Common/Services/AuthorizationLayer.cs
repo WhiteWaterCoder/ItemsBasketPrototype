@@ -1,20 +1,29 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Threading.Tasks;
+using ItemsBasket.Common.Services.Interfaces;
+using Microsoft.Extensions.Logging;
 
-namespace ItemsBasket.Common.Controllers
+namespace ItemsBasket.Common.Services
 {
-    public static class AuthorizedControllerExtensions
+    public class AuthorizationLayer : IAuthorizationLayer
     {
-        public static async Task<T> ExecuteAuthorizedAction<T>(this IAuthorizedController controller,
+        private readonly ILogger<AuthorizationLayer> _logger;
+
+        public AuthorizationLayer(ILogger<AuthorizationLayer> logger)
+        {
+            _logger = logger;
+        }
+
+        public async Task<T> ExecuteAuthorizedAction<T>(IIdentity identity, 
             Func<int, Task<T>> func, 
-            Func<string, T> errorFunc,
+            Func<string, T> errorFunc, 
             string genericErrorMessage)
         {
             try
             {
-                bool isAuthorized = TryGetAuthorizedUserId(controller, out int nameIdentifier);
+                bool isAuthorized = TryGetAuthorizedUserId(identity, out int nameIdentifier);
 
                 if (!isAuthorized)
                 {
@@ -23,25 +32,25 @@ namespace ItemsBasket.Common.Controllers
 
                 return await func(nameIdentifier);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                controller.GetLogger().LogError(e, e.Message);
+                _logger.LogError(e, e.Message);
                 return errorFunc.Invoke(genericErrorMessage);
             }
         }
 
-        private static bool TryGetAuthorizedUserId(IAuthorizedController controller,
+        private static bool TryGetAuthorizedUserId(IIdentity identity,
             out int nameIdentifier)
         {
-            var identity = controller.GetUserIdentity() as ClaimsIdentity;
+            var claimsIdentity = identity as ClaimsIdentity;
 
-            if (identity == null)
+            if (claimsIdentity == null)
             {
                 nameIdentifier = -1;
                 return false;
             }
 
-            foreach(var claim in identity.Claims)
+            foreach (var claim in claimsIdentity.Claims)
             {
                 if (claim.Type == ClaimTypes.NameIdentifier)
                 {
