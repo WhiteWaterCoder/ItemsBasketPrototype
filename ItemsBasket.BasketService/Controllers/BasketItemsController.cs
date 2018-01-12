@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using ItemsBasket.BasketService.Models;
@@ -13,8 +14,13 @@ using Microsoft.Extensions.Logging;
 namespace ItemsBasket.BasketService.Controllers
 {
     /// <summary>
-    /// Performs operations on multiple basket items for a given user.
-    /// Only Get/Post (update)/Delete (clear all items) operations are supported.
+    /// Performs operations on the basket items of the requesting user's basket.
+    /// The following operations are supported:
+    ///     - Get (list basket items)
+    ///     - Put (add a single item to the basket)
+    ///     - Post (update a single or multiple basket items)
+    ///     - Delete (delete a single or multiple basket items)
+    /// THe users identity will be extracted from the claims so ensure the ID is always included.
     /// </summary>
     [Authorize]
     [Produces("application/json")]
@@ -25,11 +31,10 @@ namespace ItemsBasket.BasketService.Controllers
         private readonly IAuthorizationLayer _authorizationLayer;
 
         public BasketItemsController(IBasketItemsRepository basketItemsRepository,
-            ILogger<BasketItemsController> logger)
-            //,IAuthorizationLayer authorizationLayer)
+            IAuthorizationLayer authorizationLayer)
         {
             _basketItemsRepository = basketItemsRepository;
-            //_authorizationLayer = authorizationLayer;
+            _authorizationLayer = authorizationLayer;
         }
         
         /// <summary>
@@ -49,58 +54,77 @@ namespace ItemsBasket.BasketService.Controllers
         }
 
         /// <summary>
-        /// Updates the given items from the given users basket. 
+        /// Adds a single item to the basket of the user who initiated the request. If the item 
+        /// has already been added then it is updated.
+        /// </summary>
+        /// <param name="update">The update object containing the basket item details.</param>
+        /// <returns>A response containing success/failure of the operation and an error message if one occurs.</returns>
+        [HttpPut]
+        public async Task<BasketItemResponse> Put([FromBody]BasketItem update)
+        {
+            return await _authorizationLayer.ExecuteAuthorizedAction(User.Identity,
+                id => _basketItemsRepository.AddItem(id, update),
+                e => new BasketItemResponse(false, e),
+                "An error occurred while trying to add a new item in your basket.");
+        }
+
+        /// <summary>
+        /// Updates the given item from the basket of the user who initiated the request.
+        ///     - If the item does not exist it will be added.
+        ///     - If the item quantity is set to zero it will be removed.
+        /// </summary>
+        /// <param name="update">A single basket update.</param>
+        /// <returns>A response containing success/failure of the operation and an error message if one occurs.</returns>
+        [HttpPost]
+        public async Task<BasketItemResponse> Post([FromBody]BasketItem update)
+        {
+            return await _authorizationLayer.ExecuteAuthorizedAction(User.Identity,
+                id => _basketItemsRepository.UpdateItem(id, update),
+                e => new BasketItemResponse(false, e),
+                "An error occurred while trying to update your basket item.");
+        }
+
+        /// <summary>
+        /// Updates the given items from the basket of the user who initiated the request.
         ///     - If an item does not exist it will be added.
         ///     - If an item quantity is set to zero it will be removed.
         /// </summary>
-        /// <param name="update">The update object containing the user and basket items details.</param>
+        /// <param name="updates">A list of basket updates.</param>
         /// <returns>A response containing success/failure of the operation and an error message if one occurs.</returns>
-        [HttpPost]
-        public async Task<BasketItemResponse> Post([FromBody]BasketItemsUpdate update)
+        [HttpPost("PostMany")]
+        public async Task<BasketItemResponse> Post([FromBody]List<BasketItem> updates)
         {
-            try
-            {
-                //TODO: Authenticate based on security token
-                return await _basketItemsRepository.UpdateItems(update.UserId, update.Items);
-            }
-            catch (Exception e)
-            {
-                //TODO :Log
-                return new BasketItemResponse(false, "An error occurred while trying to update some of theusers basket items.");
-            }
+            return await _authorizationLayer.ExecuteAuthorizedAction(User.Identity,
+                id => _basketItemsRepository.UpdateItems(id, updates),
+                e => new BasketItemResponse(false, e),
+                "An error occurred while trying to fetch the users basket items.");
         }
 
-        //[HttpDelete]
-        //public void Delete()
-        //{
+        /// <summary>
+        /// Deletes all the contents of the basket for the user who initiated the request.
+        /// </summary>
+        /// <returns>A response containing success/failure of the operation and an error message if one occurs.</returns>
+        [HttpDelete]
+        public async Task<BasketItemResponse> Delete()
+        {
+            return await _authorizationLayer.ExecuteAuthorizedAction(User.Identity,
+                id => _basketItemsRepository.ClearItems(id),
+                e => new BasketItemResponse(false, e),
+                "An error occurred while trying to clear your basket items.");
+        }
 
-        //}
-
-        //[HttpDelete("{itemId}")]
-        //public void Delete([FromQuery] int itemId)
-        //{
-
-        //}
-
-        ///// <summary>
-        ///// Deletes all the contents of the basket for the given user.
-        ///// </summary>
-        ///// <param name="userId">The ID of the user to empty the basket for.</param>
-        ///// <param name="securityToken">The security token of the user.</param>
-        ///// <returns>A response containing success/failure of the operation and an error message if one occurs.</returns>
-        //[HttpDelete("{userId}&{securityToken}")]
-        //public async Task<BasketItemResponse> Delete(int userId, string securityToken)
-        //{
-        //    try
-        //    {
-        //        //TODO: Authenticate based on security token
-        //        return await _basketItemsRepository.ClearItems(userId);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        //TODO :Log
-        //        return new BasketItemResponse(false, "An error occurred while trying to clear the users basket items.");
-        //    }
-        //}
+        /// <summary>
+        /// Deletes a single item from the basket of the user who initiated the request
+        /// </summary>
+        /// <param name="itemId">THe ID of the item to remove from the basket.</param>
+        /// <returns>A response containing success/failure of the operation and an error message if one occurs.</returns>
+        [HttpDelete("{itemId}")]
+        public async Task<BasketItemResponse> Delete([FromQuery] int itemId)
+        {
+            return await _authorizationLayer.ExecuteAuthorizedAction(User.Identity,
+                id => _basketItemsRepository.RemoveItem(id, itemId),
+                e => new BasketItemResponse(false, e),
+                "An error occurred while trying to clear your basket items.");
+        }
     }
 }

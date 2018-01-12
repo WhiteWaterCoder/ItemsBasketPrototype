@@ -32,9 +32,9 @@ namespace ItemsBasket.BasketService.Services.Interfaces
         /// Removes a single item from the basket of the given user.
         /// </summary>
         /// <param name="userId">The user ID for whom to remove the basket item from.</param>
-        /// <param name="basketItem">The basket item to remove.</param>
+        /// <param name="itemId">The item ID to remove from the basket.</param>
         /// <returns>A response containing success/failure of the operation and an error message if one occurs.</returns>
-        Task<BasketItemResponse> RemoveItem(int userId, BasketItem basketItem);
+        Task<BasketItemResponse> RemoveItem(int userId, int itemId);
 
         /// <summary>
         /// Updates (or adds if not present) a single item from the basket of the given user. 
