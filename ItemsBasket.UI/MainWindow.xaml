@@ -1,0 +1,19 @@
+﻿<mui:ModernWindow x:Class="ItemsBasket.UI.MainWindow"
+                  xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                  mc:Ignorable="d"
+                  Title="ItemsBasket.UI" Height="350" Width="525">
+
+    <mui:ModernWindow.MenuLinkGroups>
+        <mui:LinkGroup DisplayName="ItemsBasket Ui">
+            <mui:LinkGroup.Links>
+                <mui:Link DisplayName="Steps" Source="/Views/StepsControl.xaml" />
+                <mui:Link DisplayName="Authenticate" Source="/Views/LogInOutView.xaml" />
+            </mui:LinkGroup.Links>
+        </mui:LinkGroup>
+    </mui:ModernWindow.MenuLinkGroups>
+    
+</mui:ModernWindow>

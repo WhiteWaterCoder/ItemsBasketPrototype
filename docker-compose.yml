@@ -6,3 +6,17 @@ services:
     build:
       context: .
       dockerfile: ItemsBasket.BasketService\Dockerfile
+
+  itemsbasket.itemsservice:
+    image: itemsbasket.itemsservice
+    build:
+      context: .
+      dockerfile: ItemsBasket.ItemsService\Dockerfile
+
+
+  itemsbasket.ui:
+    image: itemsbasket.ui
+    build:
+      context: .
+      dockerfile: ItemsBasket.UI\Dockerfile
+
