@@ -13,7 +13,7 @@ namespace ItemsBasket.Client
         
         public void SetAuthentication(string token)
         {
-            AuthenticatedClient.AddAuthorizationHeader();
+            AuthenticatedClient.AddAuthorizationHeader(token);
         }
 
         public void Dispose()

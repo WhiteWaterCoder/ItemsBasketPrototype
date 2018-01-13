@@ -12,7 +12,7 @@ namespace ItemsBasket.Client
         /// is not available.
         /// </summary>
         public AuthenticationService()
-            : base(new EnvironmentService(), new HttpClientProvider())
+            : base(new EnvironmentService(), new HttpClientProvider(), false)
         {
         }
 
@@ -22,30 +22,19 @@ namespace ItemsBasket.Client
         /// <param name="environmentService">The environment service containing endpoint information.</param>
         /// /// <param name="httpClientProvider">The http client provider for authenticatead and non authenticated clients.</param>
         public AuthenticationService(IEnvironmentService environmentService, IHttpClientProvider httpClientProvider)
-            : base(environmentService, httpClientProvider)
+            : base(environmentService, httpClientProvider, false)
         {
         }
 
-        public async Task<(bool, string)> TryLogin(string username, string password)
+        public async Task<AuthenticationResponse> TryLogin(string username, string password)
         {
-            return await PostNonAuthenticatedCall<AuthenticationRequest, AuthenticationResponse, (bool, string)>(
+            return await PostCall(
                 $"{EnvironmentService.ServiceEndpoints[KnownService.AuthenticationService]}",
                 new AuthenticationRequest(username, password),
-                response =>
-                {
-                    if (!response.IsSuccessful)
-                    {
-                        return (false, response.ErrorMessage);
-                    }
-
-                    Session.Token = response.Item.Token;
-                    
-                    return (true, "");
-                },
                 e =>
                 {
-                    return (false, e.Message);
+                    return AuthenticationResponse.CreateFailedResult(e.Message);
                 });
-        }       
+        }
     }
 }

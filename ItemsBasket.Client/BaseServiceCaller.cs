@@ -12,18 +12,40 @@ namespace ItemsBasket.Client
     {
         private readonly IEnvironmentService _environmentService;
         private readonly IHttpClientProvider _httpClientProvider;
+        private readonly bool _authenticate;
 
         protected IEnvironmentService EnvironmentService { get { return _environmentService; } }
         protected IHttpClientProvider HttpClientProvider { get { return _httpClientProvider; } }
 
-        protected BaseServiceCaller(IEnvironmentService environmentService, IHttpClientProvider httpClientProvider)
+        protected BaseServiceCaller(IEnvironmentService environmentService, 
+            IHttpClientProvider httpClientProvider, 
+            bool authenticate)
         {
             _environmentService = environmentService;
             _httpClientProvider = httpClientProvider;
+            _authenticate = authenticate;
         }
 
         /// <summary>
-        /// Performs a POST call to the API using no authentication.
+        /// Performs a GET call to the API.
+        /// </summary>
+        /// <typeparam name="TRequest">The type of the request object that will be sent to the API.</typeparam>
+        /// <typeparam name="TResponse">The response object returned after the call is complete.</typeparam>
+        /// <param name="endpoint">The REST endpoint to make the call to.</param>
+        /// <param name="exceptionFunc">The func that will be executed if an exception occurs.</param>
+        /// <returns>A response object containing the result object.</returns>
+        protected async Task<TResponse> GetCall<TResponse>(string endpoint,
+            Func<Exception, TResponse> exceptionFunc)
+        {
+            return await PerformHttpCall<object, TResponse, TResponse>(endpoint,
+                null,
+                (HttpClient httpClient, string uri, StringContent content) => { return httpClient.GetAsync(uri); },
+                response => response,
+                exceptionFunc);
+        }
+
+        /// <summary>
+        /// Performs a POST call to the API.
         /// </summary>
         /// <typeparam name="TRequest">The type of the request object that will be sent to the API.</typeparam>
         /// <typeparam name="TRequestResponse">The type of object we expect back from the API.</typeparam>
@@ -33,7 +55,7 @@ namespace ItemsBasket.Client
         /// <param name="responseFunc">A func that will handle the API response end prepare the method return object.</param>
         /// <param name="exceptionFunc">The func that will be executed if an exception occurs.</param>
         /// <returns>A response object containing the result object.</returns>
-        protected async Task<TResponse> PostNonAuthenticatedCall<TRequest, TRequestResponse, TResponse>(string endpoint,
+        protected async Task<TResponse> PostCall<TRequest, TRequestResponse, TResponse>(string endpoint,
             TRequest requestObject,
             Func<TRequestResponse, TResponse> responseFunc,
             Func<Exception, TResponse> exceptionFunc)
@@ -42,12 +64,31 @@ namespace ItemsBasket.Client
                 requestObject,
                 (HttpClient httpClient, string uri, StringContent content) => { return httpClient.PostAsync(uri, content); },
                 responseFunc,
-                exceptionFunc,
-                false);
+                exceptionFunc);
         }
 
         /// <summary>
-        /// Performs a PUT call to the API using no authentication.
+        /// Performs a POST call to the API.
+        /// </summary>
+        /// <typeparam name="TRequest">The type of the request object that will be sent to the API.</typeparam>
+        /// <typeparam name="TResponse">The response object returned after the call is complete.</typeparam>
+        /// <param name="endpoint">The REST endpoint to make the call to.</param>
+        /// <param name="requestObject">The contents of the POST body that will be sent to the API.</param>
+        /// <param name="exceptionFunc">The func that will be executed if an exception occurs.</param>
+        /// <returns>A response object containing the result object.</returns>
+        protected async Task<TResponse> PostCall<TRequest, TResponse>(string endpoint,
+            TRequest requestObject,
+            Func<Exception, TResponse> exceptionFunc)
+        {
+            return await PerformHttpCall<TRequest, TResponse, TResponse>(endpoint,
+                requestObject,
+                (HttpClient httpClient, string uri, StringContent content) => { return httpClient.PostAsync(uri, content); },
+                response => response,
+                exceptionFunc);
+        }
+
+        /// <summary>
+        /// Performs a PUT call to the API.
         /// </summary>
         /// <typeparam name="TRequest">The type of the request object that will be sent to the API.</typeparam>
         /// <typeparam name="TRequestResponse">The type of object we expect back from the API.</typeparam>
@@ -57,7 +98,7 @@ namespace ItemsBasket.Client
         /// <param name="responseFunc">A func that will handle the API response end prepare the method return object.</param>
         /// <param name="exceptionFunc">The func that will be executed if an exception occurs.</param>
         /// <returns>A response object containing the result object.</returns>
-        protected async Task<TResponse> PutNonAuthenticatedCall<TRequest, TRequestResponse, TResponse>(string endpoint,
+        protected async Task<TResponse> PutCall<TRequest, TRequestResponse, TResponse>(string endpoint,
             TRequest requestObject,
             Func<TRequestResponse, TResponse> responseFunc,
             Func<Exception, TResponse> exceptionFunc)
@@ -66,12 +107,31 @@ namespace ItemsBasket.Client
                 requestObject,
                 (HttpClient httpClient, string uri, StringContent content) => { return httpClient.PutAsync(uri, content); },
                 responseFunc,
-                exceptionFunc,
-                false);
+                exceptionFunc);
         }
 
         /// <summary>
-        /// Performs a DELETE call to the API using no authentication.
+        /// Performs a PUT call to the API.
+        /// </summary>
+        /// <typeparam name="TRequest">The type of the request object that will be sent to the API.</typeparam>
+        /// <typeparam name="TResponse">The response object returned after the call is complete.</typeparam>
+        /// <param name="endpoint">The REST endpoint to make the call to.</param>
+        /// <param name="requestObject">The contents of the PUT body that will be sent to the API.</param>
+        /// <param name="exceptionFunc">The func that will be executed if an exception occurs.</param>
+        /// <returns>A response object containing the result object.</returns>
+        protected async Task<TResponse> PutCall<TRequest, TResponse>(string endpoint,
+            TRequest requestObject,
+            Func<Exception, TResponse> exceptionFunc)
+        {
+            return await PerformHttpCall<TRequest, TResponse, TResponse>(endpoint,
+                requestObject,
+                (HttpClient httpClient, string uri, StringContent content) => { return httpClient.PutAsync(uri, content); },
+                response => response,
+                exceptionFunc);
+        }
+
+        /// <summary>
+        /// Performs a DELETE call to the API.
         /// </summary>
         /// <typeparam name="TRequest">The type of the request object that will be sent to the API.</typeparam>
         /// <typeparam name="TRequestResponse">The type of object we expect back from the API.</typeparam>
@@ -81,7 +141,7 @@ namespace ItemsBasket.Client
         /// <param name="responseFunc">A func that will handle the API response end prepare the method return object.</param>
         /// <param name="exceptionFunc">The func that will be executed if an exception occurs.</param>
         /// <returns>A response object containing the result object.</returns>
-        protected async Task<TResponse> DeleteNonAuthenticatedCall<TRequest, TRequestResponse, TResponse>(string endpoint,
+        protected async Task<TResponse> DeleteCall<TRequest, TRequestResponse, TResponse>(string endpoint,
             TRequest requestObject,
             Func<TRequestResponse, TResponse> responseFunc,
             Func<Exception, TResponse> exceptionFunc)
@@ -90,33 +150,27 @@ namespace ItemsBasket.Client
                 requestObject,
                 (HttpClient httpClient, string uri, StringContent content) => { return httpClient.DeleteAsync(uri); },
                 responseFunc,
-                exceptionFunc,
-                false);
+                exceptionFunc);
         }
 
         /// <summary>
-        /// Performs a POST call to the API using authentication. If the user is not yet authenicated 
-        /// then an exception will be thrown.
+        /// Performs a DELETE call to the API.
         /// </summary>
         /// <typeparam name="TRequest">The type of the request object that will be sent to the API.</typeparam>
-        /// <typeparam name="TRequestResponse">The type of object we expect back from the API.</typeparam>
         /// <typeparam name="TResponse">The response object returned after the call is complete.</typeparam>
         /// <param name="endpoint">The REST endpoint to make the call to.</param>
-        /// <param name="requestObject">The contents of the POST body that will be sent to the API.</param>
-        /// <param name="responseFunc">A func that will handle the API response end prepare the method return object.</param>
+        /// <param name="requestObject">The contents of the DELETE body that will be sent to the API.</param>
         /// <param name="exceptionFunc">The func that will be executed if an exception occurs.</param>
         /// <returns>A response object containing the result object.</returns>
-        protected async Task<TResponse> PostAuthenticatedCall<TRequest, TRequestResponse, TResponse>(string endpoint,
+        protected async Task<TResponse> DeleteCall<TRequest, TResponse>(string endpoint,
             TRequest requestObject,
-            Func<TRequestResponse, TResponse> responseFunc,
             Func<Exception, TResponse> exceptionFunc)
         {
-            return await PerformHttpCall(endpoint,
+            return await PerformHttpCall<TRequest, TResponse, TResponse>(endpoint,
                 requestObject,
-                (HttpClient httpClient, string uri, StringContent content) => { return httpClient.PostAsync(uri, content); },
-                responseFunc,
-                exceptionFunc,
-                true);
+                (HttpClient httpClient, string uri, StringContent content) => { return httpClient.DeleteAsync(uri); },
+                response => response,
+                exceptionFunc);
         }
 
         /// <summary>
@@ -133,18 +187,19 @@ namespace ItemsBasket.Client
         /// <param name="authenticate">A flag to denote if the request should be authenticated If set to true a bearer value 
         /// will be added to the authentication header.</param>
         /// <returns>A response object containing the result object.</returns>
-        private async Task<TResponse> PerformHttpCall<TRequest, TRequestResponse, TResponse>(string endpoint,
+        protected async Task<TResponse> PerformHttpCall<TRequest, TRequestResponse, TResponse>(string endpoint,
             TRequest requestObject,
             Func<HttpClient, string, StringContent, Task<HttpResponseMessage>> requestFunc,
             Func<TRequestResponse, TResponse> responseFunc,
-            Func<Exception, TResponse> exceptionFunc,
-            bool authenticate)
+            Func<Exception, TResponse> exceptionFunc)
         {
-            var httpClient = authenticate 
+            var httpClient = _authenticate 
                 ? _httpClientProvider.AuthenticatedClient 
                 : _httpClientProvider.NonAuthenticatedClient;
 
-            var postData = new StringContent(JsonConvert.SerializeObject(requestObject), Encoding.UTF8, "application/json");
+            var postData = requestObject != null
+                ? new StringContent(JsonConvert.SerializeObject(requestObject), Encoding.UTF8, "application/json")
+                : new StringContent("", Encoding.UTF8, "application/text");
 
             try
             {

@@ -119,7 +119,7 @@ namespace ItemsBasket.BasketService.Controllers
         /// <param name="itemId">The ID of the item to remove from the basket.</param>
         /// <returns>A response containing success/failure of the operation and an error message if one occurs.</returns>
         [HttpDelete("{itemId}")]
-        public async Task<BasketItemResponse> Delete([FromQuery] int itemId)
+        public async Task<BasketItemResponse> Delete([FromRoute] int itemId)
         {
             return await _authorizationLayer.ExecuteAuthorizedAction(User.Identity,
                 id => _basketItemsRepository.RemoveItem(id, itemId),

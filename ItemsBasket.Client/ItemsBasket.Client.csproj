@@ -9,6 +9,8 @@
     <Compile Include="..\ItemsBasket.AuthenticationService\Models\User.cs" Link="Models\User.cs" />
     <Compile Include="..\ItemsBasket.AuthenticationService\Responses\AuthenticationResponse.cs" Link="Responses\AuthenticationResponse.cs" />
     <Compile Include="..\ItemsBasket.AuthenticationService\Responses\UserResponse.cs" Link="Responses\UserResponse.cs" />
+    <Compile Include="..\ItemsBasket.BasketService\Responses\BasketItemResponse.cs" Link="Responses\BasketItemResponse.cs" />
+    <Compile Include="..\ItemsBasket.BasketService\Responses\GetUserBasketItemsResponse.cs" Link="Responses\GetUserBasketItemsResponse.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -16,12 +18,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ItemsBasket.Common\ItemsBasket.Common.csproj" />
+    <Folder Include="Responses\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
-    <Folder Include="Responses\" />
+    <ProjectReference Include="..\ItemsBasket.Common\ItemsBasket.Common.csproj" />
   </ItemGroup>
 
 </Project>

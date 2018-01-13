@@ -8,12 +8,12 @@ namespace ItemsBasket.BasketService.Responses
     {
         private static readonly List<BasketItem> EmptyList = new List<BasketItem>();
 
-        protected GetUserBasketItemsResponse(IEnumerable<BasketItem> items, bool isSuccessful, string errorMessage) 
-            : base(items, isSuccessful, errorMessage)
+        public GetUserBasketItemsResponse(List<BasketItem> item, bool isSuccessful, string errorMessage) 
+            : base(item, isSuccessful, errorMessage)
         {
         }
 
-        public static GetUserBasketItemsResponse CreateSuccessfulResult(IEnumerable<BasketItem> basketItems)
+        public static GetUserBasketItemsResponse CreateSuccessfulResult(List<BasketItem> basketItems)
         {
             return new GetUserBasketItemsResponse(basketItems, true, "");
         }

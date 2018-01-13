@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using ItemsBasket.AuthenticationService.Responses;
+using System.Threading.Tasks;
 
 namespace ItemsBasket.Client.Interfaces
 {
@@ -13,7 +14,10 @@ namespace ItemsBasket.Client.Interfaces
         /// </summary>
         /// <param name="username">The username of the user's account.</param>
         /// <param name="password">The password of the user's account.</param>
-        /// <returns>True if the login is successful, otherwise false along with the error message.</returns>
-        Task<(bool, string)> TryLogin(string username, string password);
+        /// <returns>
+        /// An object containing the a flag for success/failure, the token if logged in successfully 
+        /// or an error message if something went wrong.
+        /// </returns>
+        Task<AuthenticationResponse> TryLogin(string username, string password);
     }
 }
