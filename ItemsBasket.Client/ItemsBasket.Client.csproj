@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\ItemsBasket.AuthenticationService\Models\AuthenticationRequest.cs" Link="Models\AuthenticationRequest.cs" />
+    <Compile Include="..\ItemsBasket.AuthenticationService\Models\User.cs" Link="Models\User.cs" />
+    <Compile Include="..\ItemsBasket.AuthenticationService\Responses\AuthenticationResponse.cs" Link="Responses\AuthenticationResponse.cs" />
+    <Compile Include="..\ItemsBasket.AuthenticationService\Responses\UserResponse.cs" Link="Responses\UserResponse.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ItemsBasket.Common\ItemsBasket.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\" />
+    <Folder Include="Responses\" />
+  </ItemGroup>
+
+</Project>

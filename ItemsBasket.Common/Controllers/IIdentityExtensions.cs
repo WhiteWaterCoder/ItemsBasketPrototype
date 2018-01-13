@@ -4,7 +4,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
 
-namespace ItemsBasket.Common.Controllers
+namespace ItemsBasket.AuthenticationService.Controllers
 {
     public static class IIdentityExtensions
     {

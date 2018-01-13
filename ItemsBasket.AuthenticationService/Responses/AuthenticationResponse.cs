@@ -1,5 +1,5 @@
-﻿using ItemsBasket.Common.Controllers;
-using ItemsBasket.Common.Models;
+﻿using ItemsBasket.AuthenticationService.Controllers;
+using ItemsBasket.AuthenticationService.Models;
 
 namespace ItemsBasket.AuthenticationService.Responses
 {
@@ -8,7 +8,7 @@ namespace ItemsBasket.AuthenticationService.Responses
     /// </summary>
     public class AuthenticationResponse : BaseResponse<AuthenticatedUser>
     {
-        protected AuthenticationResponse(AuthenticatedUser item, bool isSuccessful, string errorMessage) 
+        public AuthenticationResponse(AuthenticatedUser item, bool isSuccessful, string errorMessage) 
             : base(item, isSuccessful, errorMessage)
         {
         }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ItemsBasket.Common.Exceptions
+namespace ItemsBasket.AuthenticationService.Exceptions
 {
     public class UserNotUniqueException : Exception
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ItemsBasket.Common.Models
+namespace ItemsBasket.AuthenticationService.Models
 {
     public class Item
     {

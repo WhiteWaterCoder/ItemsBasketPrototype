@@ -1,11 +1,11 @@
 ﻿using ItemsBasket.AuthenticationService.Models;
-using ItemsBasket.Common.Controllers;
+using ItemsBasket.AuthenticationService.Controllers;
 
 namespace ItemsBasket.AuthenticationService.Responses
 {
     public class UserResponse : BaseResponse<User>
     {
-        protected UserResponse(User item, bool isSuccessful, string errorMessage) 
+        public UserResponse(User item, bool isSuccessful, string errorMessage) 
             : base(item, isSuccessful, errorMessage)
         {
         }

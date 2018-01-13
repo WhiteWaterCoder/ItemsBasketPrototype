@@ -2,10 +2,10 @@
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using ItemsBasket.Common.Services.Interfaces;
+using ItemsBasket.AuthenticationService.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace ItemsBasket.Common.Services
+namespace ItemsBasket.AuthenticationService.Services
 {
     public class AuthorizationLayer : IAuthorizationLayer
     {

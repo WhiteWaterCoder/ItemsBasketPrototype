@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using ItemsBasket.BasketService.Models;
 using ItemsBasket.BasketService.Responses;
 using ItemsBasket.BasketService.Services.Interfaces;
-using ItemsBasket.Common.Controllers;
-using ItemsBasket.Common.Services.Interfaces;
+using ItemsBasket.AuthenticationService.Controllers;
+using ItemsBasket.AuthenticationService.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -20,7 +20,7 @@ namespace ItemsBasket.BasketService.Controllers
     ///     - Put (add a single item to the basket)
     ///     - Post (update a single or multiple basket items)
     ///     - Delete (delete a single or multiple basket items)
-    /// THe users identity will be extracted from the claims so ensure the ID is always included.
+    /// The users identity will be extracted from the claims so ensure the ID is always included.
     /// </summary>
     [Authorize]
     [Produces("application/json")]
@@ -116,7 +116,7 @@ namespace ItemsBasket.BasketService.Controllers
         /// <summary>
         /// Deletes a single item from the basket of the user who initiated the request
         /// </summary>
-        /// <param name="itemId">THe ID of the item to remove from the basket.</param>
+        /// <param name="itemId">The ID of the item to remove from the basket.</param>
         /// <returns>A response containing success/failure of the operation and an error message if one occurs.</returns>
         [HttpDelete("{itemId}")]
         public async Task<BasketItemResponse> Delete([FromQuery] int itemId)

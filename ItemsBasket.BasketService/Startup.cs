@@ -1,8 +1,8 @@
 ﻿using ItemsBasket.BasketService.Services;
 using ItemsBasket.BasketService.Services.Interfaces;
-using ItemsBasket.Common.Configuration;
-using ItemsBasket.Common.Services;
-using ItemsBasket.Common.Services.Interfaces;
+using ItemsBasket.AuthenticationService.Configuration;
+using ItemsBasket.AuthenticationService.Services;
+using ItemsBasket.AuthenticationService.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

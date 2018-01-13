@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using ItemsBasket.AuthenticationService.Models;
 using ItemsBasket.AuthenticationService.Responses;
 using ItemsBasket.AuthenticationService.Services.Interfaces;
-using ItemsBasket.Common.Configuration;
-using ItemsBasket.Common.Models;
+using ItemsBasket.AuthenticationService.Configuration;
+using ItemsBasket.AuthenticationService.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -35,7 +35,7 @@ namespace ItemsBasket.AuthenticationService.Controllers
         /// <returns>An authentication response with a token if successful.</returns>
         [AllowAnonymous]
         [HttpPost]
-        public async Task<AuthenticationResponse> Get([FromBody]AuthenticationRequest request)
+        public async Task<AuthenticationResponse> Authenticate([FromBody]AuthenticationRequest request)
         {
             (bool isAuthenticated, int userId, string errorMessage) = await _usersRepository.IsAuthenticated(request.Username, request.Password);
 
