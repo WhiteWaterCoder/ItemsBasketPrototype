@@ -1,4 +1,4 @@
-﻿namespace ItemsBasket.Common.Models
+﻿namespace ItemsBasket.AuthenticationService.Models
 {
     /// <summary>
     /// The details of an authenticated user.

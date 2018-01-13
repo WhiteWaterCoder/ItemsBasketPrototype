@@ -2,7 +2,7 @@
 using System.Security.Principal;
 using System.Threading.Tasks;
 
-namespace ItemsBasket.Common.Services.Interfaces
+namespace ItemsBasket.AuthenticationService.Services.Interfaces
 {
     public interface IAuthorizationLayer
     {

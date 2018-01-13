@@ -41,7 +41,7 @@ namespace ItemsBasket.BasketService.Services
         public async Task<GetUserBasketItemsResponse> GetBasketItems(int userId)
         {
             var basket = GetOrCreateAndGetBasket(userId);
-            return GetUserBasketItemsResponse.CreateSuccessfulResult(basket.Select(i => i.Value));
+            return GetUserBasketItemsResponse.CreateSuccessfulResult(basket.Select(i => i.Value).ToList());
         }
 
         /// <summary>

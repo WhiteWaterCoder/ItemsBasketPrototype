@@ -1,4 +1,4 @@
-﻿namespace ItemsBasket.Common.Controllers
+﻿namespace ItemsBasket.AuthenticationService.Controllers
 {
     public class BaseResponse
     {

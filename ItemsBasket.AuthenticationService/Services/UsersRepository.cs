@@ -1,7 +1,7 @@
 ﻿using ItemsBasket.AuthenticationService.Models;
 using ItemsBasket.AuthenticationService.Responses;
 using ItemsBasket.AuthenticationService.Services.Interfaces;
-using ItemsBasket.Common.Models;
+using ItemsBasket.AuthenticationService.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,7 +71,7 @@ namespace ItemsBasket.AuthenticationService.Services
         /// Create a new user account. Some crude validation will take place to ensure it is valid.
         /// </summary>
         /// <param name="userName">The username of the account.</param>
-        /// <param name="password">THe password of the account.</param>
+        /// <param name="password">The password of the account.</param>
         /// <returns>A response containing success/failure of the operation and an error message if one occurs.</returns>
         public async Task<UserResponse> Create(string userName, string password)
         {
@@ -113,11 +113,6 @@ namespace ItemsBasket.AuthenticationService.Services
                 return UserResponse.CreateFailedResult($"Could not find user with ID = {user.UserId} to update.");
             }
 
-            if (!_usersValidator.IsAuthorizedToModify(user, existingUser, out string notAuthorizedMessage))
-            {
-                return UserResponse.CreateFailedResult(notAuthorizedMessage);
-            }
-
             if (!_usersValidator.IsUsernameUnique(user.Password, _context, out string errorMessage))
             {
                 return UserResponse.CreateFailedResult(errorMessage);
@@ -131,21 +126,16 @@ namespace ItemsBasket.AuthenticationService.Services
         /// <summary>
         /// Delete a user account.
         /// </summary>
-        /// <param name="user">The account details of the user to delete.</param>
+        /// <param name="userId">The ID of the user to delete.</param>
         /// <returns>A response containing success/failure of the operation and an error message if one occurs.</returns>
-        public async Task<UserResponse> Delete(User user)
+        public async Task<UserResponse> Delete(int userId)
         {
-            if (!_context.TryGetValue(user.UserId, out User existingUser))
+            if (!_context.TryGetValue(userId, out User existingUser))
             {
-                return UserResponse.CreateFailedResult($"Could not find user with ID = {user.UserId} to update.");
+                return UserResponse.CreateFailedResult($"Could not find user with ID = {userId} to delete.");
             }
 
-            if (!_usersValidator.IsAuthorizedToModify(user, existingUser, out string notAuthorizedMessage))
-            {
-                return UserResponse.CreateFailedResult(notAuthorizedMessage);
-            }
-
-            _context.Remove(user.UserId);
+            _context.Remove(userId);
 
             return UserResponse.CreateSuccessfulResult(User.Empty);
         }

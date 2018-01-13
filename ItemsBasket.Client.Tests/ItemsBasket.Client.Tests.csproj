@@ -7,8 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentAssertions" Version="4.19.4" />
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
     <PackageReference Include="xunit" Version="2.3.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
@@ -16,7 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ItemsBasket.BasketService\ItemsBasket.BasketService.csproj" />
+    <ProjectReference Include="..\ItemsBasket.AuthenticationService\ItemsBasket.AuthenticationService.csproj" />
+    <ProjectReference Include="..\ItemsBasket.Client\ItemsBasket.Client.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,5 @@
-﻿using ItemsBasket.Common.Controllers;
+﻿using ItemsBasket.AuthenticationService.Controllers;
+using Newtonsoft.Json;
 
 namespace ItemsBasket.BasketService.Responses
 {
@@ -9,6 +10,7 @@ namespace ItemsBasket.BasketService.Responses
         {
         }
 
+        [JsonConstructor]
         public BasketItemResponse(bool isSuccessful, string errorMessage) 
             : base(isSuccessful, errorMessage)
         {

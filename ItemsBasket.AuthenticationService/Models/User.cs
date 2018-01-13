@@ -1,4 +1,6 @@
-﻿namespace ItemsBasket.AuthenticationService.Models
+﻿using System.Collections.Generic;
+
+namespace ItemsBasket.AuthenticationService.Models
 {
     /// <summary>
     /// The details of a user as stored in the datastore.
@@ -35,6 +37,24 @@
         public override string ToString()
         {
             return Username;
+        }
+
+        public override bool Equals(object obj)
+        {
+            var user = obj as User;
+            return user != null &&
+                   UserId == user.UserId &&
+                   Username == user.Username &&
+                   Password == user.Password;
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = -1846303576;
+            hashCode = hashCode * -1521134295 + UserId.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Username);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Password);
+            return hashCode;
         }
     }
 }

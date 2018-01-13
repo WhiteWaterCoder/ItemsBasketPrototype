@@ -1,4 +1,4 @@
-﻿namespace ItemsBasket.Common.Configuration
+﻿namespace ItemsBasket.AuthenticationService.Configuration
 {
     public static class ConfigProvider
     {

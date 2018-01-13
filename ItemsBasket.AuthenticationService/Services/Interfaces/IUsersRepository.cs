@@ -31,7 +31,7 @@ namespace ItemsBasket.AuthenticationService.Services.Interfaces
         /// Create a new user account. Some crude validation will take place to ensure it is valid.
         /// </summary>
         /// <param name="userName">The username of the account.</param>
-        /// <param name="password">THe password of the account.</param>
+        /// <param name="password">The password of the account.</param>
         /// <returns>A response containing success/failure of the operation and an error message if one occurs.</returns>
         Task<UserResponse> Create(string userName, string password);
 
@@ -46,8 +46,8 @@ namespace ItemsBasket.AuthenticationService.Services.Interfaces
         /// <summary>
         /// Delete a user account.
         /// </summary>
-        /// <param name="user">The account details of the user to delete.</param>
+        /// <param name="userId">The user ID to delete.</param>
         /// <returns>A response containing success/failure of the operation and an error message if one occurs.</returns>
-        Task<UserResponse> Delete(User user);
+        Task<UserResponse> Delete(int userId);
     }
 }

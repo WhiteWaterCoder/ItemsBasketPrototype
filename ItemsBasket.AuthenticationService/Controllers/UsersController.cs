@@ -49,10 +49,10 @@ namespace ItemsBasket.AuthenticationService.Controllers
             return await _usersRepository.Create(user.Username, user.Password);
         }
 
-        [HttpDelete]
-        public async Task<UserResponse> Delete([FromBody]User user)
+        [HttpDelete("{userId}")]
+        public async Task<UserResponse> Delete([FromRoute]int userId)
         {
-            return await _usersRepository.Delete(user);
+            return await _usersRepository.Delete(userId);
         }
     }
 }
