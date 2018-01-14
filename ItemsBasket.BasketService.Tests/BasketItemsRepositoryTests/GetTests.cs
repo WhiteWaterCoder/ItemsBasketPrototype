@@ -1,18 +1,18 @@
 ﻿using FluentAssertions;
 using ItemsBasket.BasketService.Models;
-using ItemsBasket.BasketService.Services;
+using ItemsBasket.BasketService.Tests.BasketItemsRepositoryTests;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace ItemsBasket.BasketService.Tests.GivenAUserId
 {
-    public class WhenRequestingAllBasketItems
+    public class WhenRequestingAllBasketItems : ItemsTestBaseClass
     {
         [Fact]
         public async Task AndNoBasketExists_ThenNewEmptyBasketIsCreated()
         {
-            var repository = new BasketItemsRepository();
+            var repository = CreateBasketItemsRepository(1);
 
             var result = await repository.GetBasketItems(1);
 
@@ -24,7 +24,7 @@ namespace ItemsBasket.BasketService.Tests.GivenAUserId
         [Fact]
         public async Task AndBasketExists_ThenContentsShouldBeReturned()
         {
-            var repository = new BasketItemsRepository();
+            var repository = CreateBasketItemsRepository(1);
 
             await repository.AddItem(1, new BasketItem(1, 2));
 

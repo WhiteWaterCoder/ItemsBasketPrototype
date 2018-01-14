@@ -1,4 +1,6 @@
-﻿using ItemsBasket.BasketService.Services;
+﻿extern alias Client;
+
+using ItemsBasket.BasketService.Services;
 using ItemsBasket.BasketService.Services.Interfaces;
 using ItemsBasket.AuthenticationService.Configuration;
 using ItemsBasket.AuthenticationService.Services;
@@ -13,6 +15,8 @@ using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.IO;
 using System.Text;
+using Client::ItemsBasket.Client.Interfaces;
+using Client::ItemsBasket.Client;
 
 namespace ItemsBasket.BasketService
 {
@@ -63,6 +67,7 @@ namespace ItemsBasket.BasketService
 
             services.AddSingleton<IBasketItemsRepository, BasketItemsRepository>();
             services.AddSingleton<IAuthorizationLayer, AuthorizationLayer>();
+            services.AddSingleton<IItemsService, ItemsService>();
 
             services.AddMvc();
         }

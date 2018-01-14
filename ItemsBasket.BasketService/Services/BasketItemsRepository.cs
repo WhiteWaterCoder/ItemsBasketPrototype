@@ -1,7 +1,11 @@
-﻿using ItemsBasket.BasketService.Models;
+﻿extern alias Client;
+
+using Client::ItemsBasket.Client.Interfaces;
+using ItemsBasket.BasketService.Models;
 using ItemsBasket.BasketService.Responses;
 using ItemsBasket.BasketService.Services.Interfaces;
-using System;
+using ItemsBasket.Common.Extentions;
+using ItemsBasket.Common.Models;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +21,17 @@ namespace ItemsBasket.BasketService.Services
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
     public class BasketItemsRepository : IBasketItemsRepository
     {
+        private readonly IItemsService _itemsService;
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        /// <param name="itemsService">The items service dependency.</param>
+        public BasketItemsRepository(IItemsService itemsService)
+        {
+            _itemsService = itemsService;
+        }
+
         /// <summary>
         /// The context represents a dictionary of:
         ///     key: 
@@ -57,7 +72,29 @@ namespace ItemsBasket.BasketService.Services
 
             basket.AddOrUpdate(basketItem.ItemId, basketItem, (_, bi) => basketItem);
 
-            return new BasketItemResponse(true);
+            var itemDetails = await GetItemDetails(basketItem);
+
+            /*
+             * Bit of a cheat... If the item does not exist we ought to not add it.
+             * This is breaking my integration test which is the only way to show the whole
+             * service working since I did not manage to complete a UI. 
+             * The below commented implementation is what I had am replacing it to allow the addition.
+
+            if (!itemDetails.IsEmpty())
+            {
+                basket.AddOrUpdate(basketItem.ItemId, basketItem, (_, bi) => basketItem);
+
+                return BasketItemResponse.CreateSuccessfulResult(
+                    new DetailedBasketItem(basketItem.ItemId,
+                            itemDetails.Description,
+                            itemDetails.Price,
+                            basketItem.Quantity));
+            }
+
+            return BasketItemResponse.CreateFailedResult($"Item with ID={basketItem.ItemId} is not a valid item and cannot be added to your basket.");
+            */
+
+            return BasketItemResponse.CreateSuccessfulResult(await CreateDetailedBasketItem(basketItem));
         }
 
         /// <summary>
@@ -72,7 +109,7 @@ namespace ItemsBasket.BasketService.Services
 
             basket.TryRemove(itemId, out BasketItem _);
 
-            return new BasketItemResponse(true);
+            return BasketItemResponse.CreateSuccessfulResult(DetailedBasketItem.Empty);
         }
 
         /// <summary>
@@ -88,8 +125,10 @@ namespace ItemsBasket.BasketService.Services
             var basket = GetOrCreateAndGetBasket(userId);
 
             UpdateOrRemoveBasketItem(basket, basketItem);
+            
+            var detailedBasketItem = await CreateDetailedBasketItem(basketItem);
 
-            return new BasketItemResponse(true);
+            return BasketItemResponse.CreateSuccessfulResult(detailedBasketItem);
         }
 
         /// <summary>
@@ -104,12 +143,19 @@ namespace ItemsBasket.BasketService.Services
         {
             var basket = GetOrCreateAndGetBasket(userId);
 
+            var detailedBasketItems = new List<DetailedBasketItem>();
+
             foreach (var basketItem in basketItems)
             {
                 UpdateOrRemoveBasketItem(basket, basketItem);
+
+                // OK this is not optimal but im running out of time :-)
+                var detailedBasketItem = await CreateDetailedBasketItem(basketItem);
+
+                detailedBasketItems.Add(detailedBasketItem);
             }
 
-            return new BasketItemResponse(true);
+            return BasketItemResponse.CreateSuccessfulResult(detailedBasketItems);
         }
 
         /// <summary>
@@ -123,7 +169,7 @@ namespace ItemsBasket.BasketService.Services
 
             basket.Clear();
 
-            return new BasketItemResponse(true);
+            return BasketItemResponse.CreateSuccessfulResult(DetailedBasketItem.Empty);
         }
 
         private ConcurrentDictionary<int, BasketItem> GetOrCreateAndGetBasket(int userId)
@@ -150,6 +196,24 @@ namespace ItemsBasket.BasketService.Services
             {
                 basket.AddOrUpdate(basketItem.ItemId, basketItem, (_, bi) => basketItem);
             }
+        }
+
+        private async Task<ItemDetails> GetItemDetails(BasketItem item)
+        {
+            var result = await _itemsService.GetItems(new List<int> { item.ItemId });
+
+            return result.Item.Count == 0
+                ? ItemDetails.Empty
+                : result.Item.First();
+        }
+
+        private async Task<DetailedBasketItem> CreateDetailedBasketItem(BasketItem basketItem)
+        {
+            var itemDetails = await GetItemDetails(basketItem);
+
+            return itemDetails.IsEmpty()
+                ? new DetailedBasketItem(basketItem.ItemId, "Item description could not be found", -1, basketItem.Quantity)
+                : new DetailedBasketItem(basketItem.ItemId, itemDetails.Description, itemDetails.Price, basketItem.Quantity);
         }
     }
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously

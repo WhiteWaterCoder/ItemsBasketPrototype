@@ -13,11 +13,11 @@
   </Target>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\ItemsBasket.BasketService.xml</DocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\ItemsBasket.ItemsService.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\ItemsBasket.BasketService.xml</DocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\ItemsBasket.ItemsService.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -35,9 +35,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ItemsBasket.Client\ItemsBasket.Client.csproj">
-      <Aliases>Client</Aliases>
-    </ProjectReference>
     <ProjectReference Include="..\ItemsBasket.Common\ItemsBasket.Common.csproj" />
   </ItemGroup>
 

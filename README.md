@@ -49,6 +49,16 @@ When up and running, the service endpoints are:
 	* http://localhost:8002/api/BasketItems
 * Swagger: http://localhost:8002/swagger/
 
+### Items Service ###
+
+A simple API to return a list of items that can be added to the basket. It is used by the basket service to gather more information about the item added and could be used for validation (although this ended up not being the case as it complicated my integration test so decided to disable it).
+
+When up and running, the service endpoints are:
+
+* API: 
+	* http://localhost:8003/api/Items
+* Swagger: http://localhost:8003/swagger/
+
 ## Client Library ##
 
 The client library is an abstraction over the REST API and offers the following features over consuming the REST APIs directly:
@@ -61,9 +71,9 @@ The end state of this library would be to be packaged in Nuget.
 
 ## Debugging and deployment ##
 
-You can simply pull the code and run it from Visual Studio. You will need to set multiple startup projects and start both the **Authentication** and **BasketItems** services.
+You can simply pull the code and run it from Visual Studio. You will need to set multiple startup projects and start the **Authentication**, **Items** and **BasketItems** services.
 
-Alternatively you can use Docker. Just navigate to the root folder of the project and type: **docker-compose up**. When complete, both the **Authentication** and **BasketItems** services should be running on their expected ports.
+Alternatively you can use Docker. Just navigate to the root folder of the project and type: **docker-compose up**. When complete, both the **Authentication**, **Items** and **BasketItems** services should be running on their expected ports.
 
 ## Other API points ##
 

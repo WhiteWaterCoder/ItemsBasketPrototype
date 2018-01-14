@@ -19,8 +19,10 @@ namespace ItemsBasket.Client.Tests
     {
         private readonly TestServer _authenticationServer;
         private readonly TestServer _basketServer;
+        private readonly TestServer _itemsServer;
         private readonly HttpClient _authenticationClient;
         private readonly HttpClient _basketClient;
+        private readonly HttpClient _itemsClient;
         private readonly IAuthenticationService _authenticationService;
         private readonly IBasketService _basketService;
         private readonly IHttpClientProvider _basketHttpClientProvider;
@@ -32,6 +34,9 @@ namespace ItemsBasket.Client.Tests
 
             _basketServer = new TestServer(new WebHostBuilder().UseStartup<BasketService.Startup>());
             _basketClient = _basketServer.CreateClient();
+
+            _itemsServer = new TestServer(new WebHostBuilder().UseStartup<ItemsService.Startup>());
+            _itemsClient = _itemsServer.CreateClient();
 
             var environmentService = TestEnvironmentSetupHelper.CreateMockEnvironmentService();
 

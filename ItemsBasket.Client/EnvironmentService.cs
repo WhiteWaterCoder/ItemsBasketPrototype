@@ -22,6 +22,7 @@ namespace ItemsBasket.Client
                 { KnownService.AuthenticationService, "http://localhost:8001/api/Authentication" },
                 { KnownService.UserService, "http://localhost:8001/api/Users" },
                 { KnownService.BasketService, "http://localhost:8002/api/BasketItems" },
+                { KnownService.ItemsService, "http://localhost:8003/api/Items" },
             };
         }
     }
