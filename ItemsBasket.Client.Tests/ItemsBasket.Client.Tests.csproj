@@ -21,6 +21,7 @@
     <ProjectReference Include="..\ItemsBasket.Client\ItemsBasket.Client.csproj">
       <Aliases>Client</Aliases>
     </ProjectReference>
+    <ProjectReference Include="..\ItemsBasket.ItemsService\ItemsBasket.ItemsService.csproj" />
   </ItemGroup>
 
 </Project>

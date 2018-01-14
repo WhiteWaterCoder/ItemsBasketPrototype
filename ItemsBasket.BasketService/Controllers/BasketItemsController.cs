@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Principal;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using ItemsBasket.BasketService.Models;
 using ItemsBasket.BasketService.Responses;
 using ItemsBasket.BasketService.Services.Interfaces;
-using ItemsBasket.AuthenticationService.Controllers;
 using ItemsBasket.AuthenticationService.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace ItemsBasket.BasketService.Controllers
 {
@@ -69,7 +65,7 @@ namespace ItemsBasket.BasketService.Controllers
         {
             return await _authorizationLayer.ExecuteAuthorizedAction(User.Identity,
                 id => _basketItemsRepository.AddItem(id, update),
-                e => new BasketItemResponse(false, e),
+                e => BasketItemResponse.CreateFailedResult(e),
                 "An error occurred while trying to add a new item in your basket.");
         }
 
@@ -85,7 +81,7 @@ namespace ItemsBasket.BasketService.Controllers
         {
             return await _authorizationLayer.ExecuteAuthorizedAction(User.Identity,
                 id => _basketItemsRepository.UpdateItem(id, update),
-                e => new BasketItemResponse(false, e),
+                e => BasketItemResponse.CreateFailedResult(e),
                 "An error occurred while trying to update your basket item.");
         }
 
@@ -101,7 +97,7 @@ namespace ItemsBasket.BasketService.Controllers
         {
             return await _authorizationLayer.ExecuteAuthorizedAction(User.Identity,
                 id => _basketItemsRepository.UpdateItems(id, updates),
-                e => new BasketItemResponse(false, e),
+                e => BasketItemResponse.CreateFailedResult(e),
                 "An error occurred while trying to fetch the users basket items.");
         }
 
@@ -114,7 +110,7 @@ namespace ItemsBasket.BasketService.Controllers
         {
             return await _authorizationLayer.ExecuteAuthorizedAction(User.Identity,
                 id => _basketItemsRepository.ClearItems(id),
-                e => new BasketItemResponse(false, e),
+                e => BasketItemResponse.CreateFailedResult(e),
                 "An error occurred while trying to clear your basket items.");
         }
 
@@ -128,7 +124,7 @@ namespace ItemsBasket.BasketService.Controllers
         {
             return await _authorizationLayer.ExecuteAuthorizedAction(User.Identity,
                 id => _basketItemsRepository.RemoveItem(id, itemId),
-                e => new BasketItemResponse(false, e),
+                e => BasketItemResponse.CreateFailedResult(e),
                 "An error occurred while trying to clear your basket items.");
         }
     }

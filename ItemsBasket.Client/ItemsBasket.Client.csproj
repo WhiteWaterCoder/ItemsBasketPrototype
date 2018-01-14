@@ -11,6 +11,7 @@
     <Compile Include="..\ItemsBasket.AuthenticationService\Responses\UserResponse.cs" Link="Responses\UserResponse.cs" />
     <Compile Include="..\ItemsBasket.BasketService\Responses\BasketItemResponse.cs" Link="Responses\BasketItemResponse.cs" />
     <Compile Include="..\ItemsBasket.BasketService\Responses\GetUserBasketItemsResponse.cs" Link="Responses\GetUserBasketItemsResponse.cs" />
+    <Compile Include="..\ItemsBasket.ItemsService\Responses\GetItemsResponse.cs" Link="Responses\GetItemsResponse.cs" />
   </ItemGroup>
 
   <ItemGroup>

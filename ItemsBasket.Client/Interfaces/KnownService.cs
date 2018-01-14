@@ -4,6 +4,7 @@
     {
         AuthenticationService,
         UserService,
-        BasketService
+        BasketService,
+        ItemsService
     }
 }

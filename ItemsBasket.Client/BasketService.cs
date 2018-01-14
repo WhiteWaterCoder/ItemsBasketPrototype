@@ -51,7 +51,7 @@ namespace ItemsBasket.Client
             return await PutCall(
                 $"{EnvironmentService.ServiceEndpoints[KnownService.BasketService]}",
                 item,
-                e => { return new BasketItemResponse(false, e.Message); });
+                e => { return BasketItemResponse.CreateFailedResult(e.Message); });
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace ItemsBasket.Client
             return await PostCall(
                 $"{EnvironmentService.ServiceEndpoints[KnownService.BasketService]}",
                 item,
-                e => { return new BasketItemResponse(false, e.Message); });
+                e => { return BasketItemResponse.CreateFailedResult(e.Message); });
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace ItemsBasket.Client
             return await PostCall(
                 $"{EnvironmentService.ServiceEndpoints[KnownService.BasketService]}",
                 items,
-                e => { return new BasketItemResponse(false, e.Message); });
+                e => { return BasketItemResponse.CreateFailedResult(e.Message); });
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace ItemsBasket.Client
             return await DeleteCall(
                 $"{EnvironmentService.ServiceEndpoints[KnownService.BasketService]}/{item.ItemId}",
                 item,
-                e => { return new BasketItemResponse(false, e.Message); });
+                e => { return BasketItemResponse.CreateFailedResult(e.Message); });
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace ItemsBasket.Client
             return await DeleteCall<object, BasketItemResponse>(
                 $"{EnvironmentService.ServiceEndpoints[KnownService.BasketService]}",
                 null,
-                e => { return new BasketItemResponse(false, e.Message); });
+                e => { return BasketItemResponse.CreateFailedResult(e.Message); });
         }
     }
 }

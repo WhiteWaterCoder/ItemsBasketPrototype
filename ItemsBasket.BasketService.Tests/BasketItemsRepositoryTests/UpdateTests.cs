@@ -12,7 +12,7 @@ namespace ItemsBasket.BasketService.Tests.BasketItemsRepositoryTests
         [Fact]
         public async Task WhenUpdatingAnItemNotInTheBasket_ThenItemGetsAdded()
         {
-            var repository = new BasketItemsRepository();
+            var repository = CreateBasketItemsRepository(0);
 
             await UpdateItemNotInBasketAndAssert(repository);
         }
@@ -20,7 +20,7 @@ namespace ItemsBasket.BasketService.Tests.BasketItemsRepositoryTests
         [Fact]
         public async Task WhenUpdatingAnItemInTheBasket_ThenItemGetsUpdated()
         {
-            var repository = new BasketItemsRepository();
+            var repository = CreateBasketItemsRepository(0);
 
             await UpdateItemInBasketAndAssert(repository);
         }
@@ -28,7 +28,7 @@ namespace ItemsBasket.BasketService.Tests.BasketItemsRepositoryTests
         [Fact]
         public async Task WhenUpdatingAnItemInTheBasketToZeroQuantity_ThenItemGetsRemoved()
         {
-            var repository = new BasketItemsRepository();
+            var repository = CreateBasketItemsRepository(0);
 
             await UpdateItemInBasketToZeroQuantityAndAssert(repository);
         }
@@ -39,7 +39,7 @@ namespace ItemsBasket.BasketService.Tests.BasketItemsRepositoryTests
         [Fact]
         public async Task WhenUpdatingAnItemNotInTheBasket_ThenItemGetsAdded()
         {
-            var repository = new BasketItemsRepository();
+            var repository = CreateBasketItemsRepository(0);
 
             await repository.CreateAndClearBasket(UserId);
 
@@ -49,7 +49,7 @@ namespace ItemsBasket.BasketService.Tests.BasketItemsRepositoryTests
         [Fact]
         public async Task WhenUpdatingAnItemInTheBasket_ThenItemGetsUpdated()
         {
-            var repository = new BasketItemsRepository();
+            var repository = CreateBasketItemsRepository(0);
 
             await repository.CreateAndClearBasket(UserId);
 
@@ -59,7 +59,7 @@ namespace ItemsBasket.BasketService.Tests.BasketItemsRepositoryTests
         [Fact]
         public async Task WhenUpdatingAnItemInTheBasketToZeroQuantity_ThenItemGetsRemoved()
         {
-            var repository = new BasketItemsRepository();
+            var repository = CreateBasketItemsRepository(0);
 
             await repository.CreateAndClearBasket(UserId);
 
@@ -67,7 +67,7 @@ namespace ItemsBasket.BasketService.Tests.BasketItemsRepositoryTests
         }
     }
 
-    public class UpdatesBaseClass
+    public class UpdatesBaseClass : ItemsTestBaseClass
     {
         protected const int UserId = 1;
 

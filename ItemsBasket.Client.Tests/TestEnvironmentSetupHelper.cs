@@ -19,6 +19,7 @@ namespace ItemsBasket.Client.Tests
                         { KnownService.AuthenticationService, "/api/Authentication" },
                         { KnownService.UserService, "api/Users" },
                         { KnownService.BasketService, "api/BasketItems" },
+                        { KnownService.ItemsService, "api/Items" },
                     });
 
             return enviornmentService.Object;
