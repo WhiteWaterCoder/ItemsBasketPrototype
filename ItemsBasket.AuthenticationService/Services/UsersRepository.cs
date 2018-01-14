@@ -1,8 +1,6 @@
 ﻿using ItemsBasket.AuthenticationService.Models;
 using ItemsBasket.AuthenticationService.Responses;
 using ItemsBasket.AuthenticationService.Services.Interfaces;
-using ItemsBasket.AuthenticationService.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,6 +19,10 @@ namespace ItemsBasket.AuthenticationService.Services
 
         private readonly IUsersValidator _usersValidator;
 
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        /// <param name="usersValidator">The users validator dependency.</param>
         public UsersRepository(IUsersValidator usersValidator)
         {
             _usersValidator = usersValidator;

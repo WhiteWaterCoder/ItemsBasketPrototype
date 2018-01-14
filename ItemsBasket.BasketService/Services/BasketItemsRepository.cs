@@ -75,11 +75,6 @@ namespace ItemsBasket.BasketService.Services
             return new BasketItemResponse(true);
         }
 
-        public void CreateAndClearBasket()
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// Updates (or adds if not present) a single item from the basket of the given user. 
         /// The only thing that can be updated is the quantity. If the quantity is set to zero 

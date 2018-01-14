@@ -16,6 +16,7 @@ using System.Text;
 
 namespace ItemsBasket.BasketService
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -84,4 +85,5 @@ namespace ItemsBasket.BasketService
             app.UseMvc();
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

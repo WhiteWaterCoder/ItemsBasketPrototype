@@ -16,6 +16,10 @@ namespace ItemsBasket.AuthenticationService.Controllers
     {
         private readonly IUsersRepository _usersRepository;
 
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        /// <param name="usersRepository">The user repository dependency.</param>
         public UsersController(IUsersRepository usersRepository)
         {
             _usersRepository = usersRepository;
@@ -43,12 +47,22 @@ namespace ItemsBasket.AuthenticationService.Controllers
             return await _usersRepository.Update(user);
         }
 
+        /// <summary>
+        /// Create a new user account.
+        /// </summary>
+        /// <param name="user">The user to create the account for.</param>
+        /// <returns>A response containing success/failure of the operation and an error message if one occurs.</returns>
         [HttpPut]
         public async Task<UserResponse> Put([FromBody]User user)
         {
             return await _usersRepository.Create(user.Username, user.Password);
         }
 
+        /// <summary>
+        /// Delete an existing user account with the given ID.
+        /// </summary>
+        /// <param name="userId">The user ID to delete the account for.</param>
+        /// <returns>A response containing success/failure of the operation and an error message if one occurs.</returns>
         [HttpDelete("{userId}")]
         public async Task<UserResponse> Delete([FromRoute]int userId)
         {

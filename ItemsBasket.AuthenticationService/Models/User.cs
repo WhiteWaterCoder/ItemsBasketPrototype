@@ -27,6 +27,12 @@ namespace ItemsBasket.AuthenticationService.Models
         /// </summary>
         public string Password { get; }
 
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <param name="userName">The username of the user.</param>
+        /// <param name="password">The password of the user's account.</param>
         public User(int userId, string userName, string password)
         {
             UserId = userId;
@@ -34,6 +40,7 @@ namespace ItemsBasket.AuthenticationService.Models
             Password = password;
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override string ToString()
         {
             return Username;
@@ -56,5 +63,6 @@ namespace ItemsBasket.AuthenticationService.Models
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Password);
             return hashCode;
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

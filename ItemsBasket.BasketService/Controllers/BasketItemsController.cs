@@ -30,6 +30,11 @@ namespace ItemsBasket.BasketService.Controllers
         private readonly IBasketItemsRepository _basketItemsRepository;
         private readonly IAuthorizationLayer _authorizationLayer;
 
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        /// <param name="basketItemsRepository">The basket items repository dependency.</param>
+        /// <param name="authorizationLayer">The authorization layer dependency.</param>
         public BasketItemsController(IBasketItemsRepository basketItemsRepository,
             IAuthorizationLayer authorizationLayer)
         {

@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore;
+﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace ItemsBasket.AuthenticationService
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class Program
     {
         public static void Main(string[] args)
@@ -22,4 +16,5 @@ namespace ItemsBasket.AuthenticationService
                 .UseStartup<Startup>()
                 .Build();
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }
