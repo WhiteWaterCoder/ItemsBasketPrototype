@@ -6,3 +6,10 @@ services:
     build:
       context: .
       dockerfile: ItemsBasket.BasketService\Dockerfile
+
+  itemsbasket.authenticationservice:
+    image: itemsbasket.authenticationservice
+    build:
+      context: .
+      dockerfile: ItemsBasket.AuthenticationService\Dockerfile
+
