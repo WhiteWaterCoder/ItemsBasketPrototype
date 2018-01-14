@@ -1,16 +1,15 @@
-﻿using System;
+﻿using ItemsBasket.AuthenticationService.Configuration;
+using ItemsBasket.AuthenticationService.Models;
+using ItemsBasket.AuthenticationService.Responses;
+using ItemsBasket.AuthenticationService.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using ItemsBasket.AuthenticationService.Models;
-using ItemsBasket.AuthenticationService.Responses;
-using ItemsBasket.AuthenticationService.Services.Interfaces;
-using ItemsBasket.AuthenticationService.Configuration;
-using ItemsBasket.AuthenticationService.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 
 namespace ItemsBasket.AuthenticationService.Controllers
 {
@@ -23,6 +22,10 @@ namespace ItemsBasket.AuthenticationService.Controllers
     {
         private readonly IUsersRepository _usersRepository;
 
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        /// <param name="usersRepository">THe user repository object dependency to be injected.</param>
         public AuthenticationController(IUsersRepository usersRepository)
         {
             _usersRepository = usersRepository;

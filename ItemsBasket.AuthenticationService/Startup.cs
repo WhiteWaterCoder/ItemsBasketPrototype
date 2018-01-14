@@ -10,6 +10,7 @@ using System.IO;
 
 namespace ItemsBasket.AuthenticationService
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -18,8 +19,7 @@ namespace ItemsBasket.AuthenticationService
         }
 
         public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
+        
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
@@ -45,7 +45,6 @@ namespace ItemsBasket.AuthenticationService
             services.AddMvc();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
@@ -62,4 +61,5 @@ namespace ItemsBasket.AuthenticationService
             app.UseMvc();
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

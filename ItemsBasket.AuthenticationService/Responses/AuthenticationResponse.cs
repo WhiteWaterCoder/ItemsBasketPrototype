@@ -8,6 +8,14 @@ namespace ItemsBasket.AuthenticationService.Responses
     /// </summary>
     public class AuthenticationResponse : BaseResponse<AuthenticatedUser>
     {
+        /// <summary>
+        /// Default constructor. It is marked as public since Json.Net requires a public constructor.
+        /// You can use this or for convinience (and consistency to avoid null user objects if none
+        /// is applicable) prefer the factory methods provided.
+        /// </summary>
+        /// <param name="item">The authenticated user object.</param>
+        /// <param name="isSuccessful">A flag to denote success/failure.</param>
+        /// <param name="errorMessage">The error message if one occurred.</param>
         public AuthenticationResponse(AuthenticatedUser item, bool isSuccessful, string errorMessage) 
             : base(item, isSuccessful, errorMessage)
         {
