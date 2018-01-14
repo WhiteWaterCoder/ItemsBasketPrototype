@@ -54,8 +54,8 @@ namespace ItemsBasket.AuthenticationService.Controllers
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
                 var token = new JwtSecurityToken(
-                    issuer: "localhost:57754",
-                    audience: "localhost:49860",
+                    issuer: "localhost:8001",
+                    audience: "localhost:8002",
                     claims: claims,
                     expires: DateTime.Now.AddMonths(1),
                     signingCredentials: creds);

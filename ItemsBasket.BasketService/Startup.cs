@@ -54,8 +54,8 @@ namespace ItemsBasket.BasketService
                         ValidateAudience = false,
                         ValidateLifetime = false,
                         ValidateIssuerSigningKey = false,
-                        ValidIssuer = "localhost:57754",
-                        ValidAudience = "localhost:49860",
+                        ValidIssuer = "localhost:8001",
+                        ValidAudience = "localhost:8002",
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(ConfigProvider.SecurityKey))
                     };
                 });

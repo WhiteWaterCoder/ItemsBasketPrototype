@@ -19,9 +19,9 @@ namespace ItemsBasket.Client
         {
             ServiceEndpoints = new Dictionary<KnownService, string>
             {
-                { KnownService.AuthenticationService, "http://localhost:57754/api/Authentication" },
-                { KnownService.UserService, "http://localhost:57754/api/Users" },
-                { KnownService.BasketService, "http://localhost:49860/api/BasketItems" },
+                { KnownService.AuthenticationService, "http://localhost:8001/api/Authentication" },
+                { KnownService.UserService, "http://localhost:8001/api/Users" },
+                { KnownService.BasketService, "http://localhost:8002/api/BasketItems" },
             };
         }
     }
